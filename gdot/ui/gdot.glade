@@ -30,6 +30,7 @@ Author: Thomas Pointhuber
   <!-- interface-authors Thomas Pointhuber -->
   <object class="GtkApplicationWindow" id="application">
     <property name="can_focus">False</property>
+    <signal name="destroy" handler="onDeleteWindow" swapped="no"/>
     <child>
       <object class="GtkPaned" id="paned_container">
         <property name="name">panel</property>
