@@ -169,7 +169,7 @@ class GDot(object):
         self.dotwidget.set_dotcode(self.get_dotcode(), None)
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(description='GUI to edit and view graphviz files')
     parser.add_argument('dotfile', nargs='?', type=str)
 
@@ -188,3 +188,6 @@ if __name__ == '__main__':
 
     # startup gui
     Gtk.main()
+
+if __name__ == '__main__':
+    main()
