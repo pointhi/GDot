@@ -30,7 +30,7 @@ Author: Thomas Pointhuber
   <!-- interface-authors Thomas Pointhuber -->
   <object class="GtkApplicationWindow" id="application">
     <property name="can_focus">False</property>
-    <signal name="destroy" handler="onDeleteWindow" swapped="no"/>
+    <signal name="destroy" handler="on_delete_window" swapped="no"/>
     <child>
       <object class="GtkPaned" id="paned_container">
         <property name="name">panel</property>
@@ -71,7 +71,7 @@ Author: Thomas Pointhuber
           </packing>
         </child>
         <child>
-          <object class="GtkBox" id="diagramm_container">
+          <object class="GtkBox" id="diagram_container">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
@@ -79,13 +79,16 @@ Author: Thomas Pointhuber
               <object class="GtkToolbar" id="diagram_tools">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="toolbar_style">icons</property>
+                <property name="toolbar_style">both-horiz</property>
                 <child>
-                  <object class="GtkToolButton" id="reload">
+                  <object class="GtkToolButton" id="btn_reload">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="is_important">True</property>
                     <property name="label" translatable="yes">Reload</property>
                     <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-refresh</property>
+                    <signal name="clicked" handler="on_btn_reload" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -93,11 +96,80 @@ Author: Thomas Pointhuber
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkToolButton" id="zoom_out">
+                  <object class="GtkToolButton">
+                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
+                    <property name="can_focus">False</property>
+                    <property name="is_important">True</property>
+                    <property name="label" translatable="yes">Export</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-convert</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSeparatorToolItem">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Zoom In</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-zoom-in</property>
+                    <signal name="clicked" handler="on_btn_zoom_in" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Zoom Out</property>
                     <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-zoom-out</property>
+                    <signal name="clicked" handler="on_btn_zoom_out" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Zoom Fit</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-zoom-fit</property>
+                    <signal name="clicked" handler="on_btn_zoom_fit" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="homogeneous">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkToolButton">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Zoom 100</property>
+                    <property name="use_underline">True</property>
+                    <property name="stock_id">gtk-zoom-100</property>
+                    <signal name="clicked" handler="on_btn_zoom_100" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -126,22 +198,23 @@ Author: Thomas Pointhuber
       <object class="GtkHeaderBar" id="header_bar">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="title">gdot</property>
-        <property name="subtitle">some_file.dot</property>
+        <property name="title">GDot</property>
         <property name="show_close_button">True</property>
         <child>
           <object class="GtkFileChooserButton" id="btn_file_chooser">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="title" translatable="yes"/>
+            <signal name="file-set" handler="on_load_new_file" swapped="no"/>
           </object>
         </child>
         <child>
-          <object class="GtkButton" id="btn_save">
-            <property name="label" translatable="yes">Save</property>
+          <object class="GtkButton" id="btn_save_as">
+            <property name="label" translatable="yes">Save as</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <signal name="clicked" handler="on_btn_save_as" swapped="no"/>
           </object>
           <packing>
             <property name="position">1</property>
