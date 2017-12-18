@@ -23,19 +23,35 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('GtkSource', '3.0')
 from gi.repository import Gtk, GtkSource, GObject  # noqa
 
+gi.require_version('PangoCairo', '1.0')
+from xdot import DotWidget
+
 # register "non standard" widgets which we require
 GObject.type_register(GtkSource.View)
+
+
+dotcode = """
+digraph G {
+  Hello [URL="http://en.wikipedia.org/wiki/Hello"]
+  World [URL="http://en.wikipedia.org/wiki/World"]
+    Hello -> World
+}
+"""
 
 
 class Handler:
     def onDeleteWindow(self, *args):
         Gtk.main_quit(*args)
 
-
 if __name__ == '__main__':
     builder = Gtk.Builder()
     builder.add_from_file("ui/gdot.glade")
     builder.connect_signals(Handler())
+
+    dotwidget = DotWidget()
+
+    scroll_diagramm = builder.get_object("diagramm_container")
+    scroll_diagramm.pack_start(dotwidget, True, True, 0)
 
     window = builder.get_object("application")
     window.show_all()
@@ -43,6 +59,8 @@ if __name__ == '__main__':
     # workaround to support KeyboardInterrupt
     import signal
     signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+    dotwidget.set_dotcode(dotcode, None)
 
     # startup gui
     Gtk.main()
