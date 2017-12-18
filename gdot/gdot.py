@@ -72,6 +72,7 @@ class GDot(object):
 
     @staticmethod
     def on_delete_window(*args):
+        # TODO: current content not saved
         Gtk.main_quit(*args)
 
     def on_load_new_file(self, chooser):
@@ -103,6 +104,7 @@ class GDot(object):
         self.dotwidget.on_zoom_100(button)
 
     def open_file(self, path):
+        # TODO: current content not saved
         with open(path, 'r') as fp:
             self.set_dotcode(fp.read())
             self.header_bar.set_subtitle(path)
