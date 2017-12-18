@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.20.2 
+
+Copyright (C) 
+
+This file is part of gdot.
+
+gdot is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+gdot is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with gdot.  If not, see <http://www.gnu.org/licenses/>.
+
+Author: Thomas Pointhuber
+
+-->
+<interface>
+  <requires lib="gtk+" version="3.20"/>
+  <requires lib="gtksourceview" version="3.0"/>
+  <!-- interface-license-type gplv3 -->
+  <!-- interface-name gdot -->
+  <!-- interface-description gtk editor for graphviz files -->
+  <!-- interface-authors Thomas Pointhuber -->
+  <object class="GtkApplicationWindow" id="application">
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkPaned" id="paned_container">
+        <property name="name">panel</property>
+        <property name="width_request">800</property>
+        <property name="height_request">500</property>
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="resize_mode">queue</property>
+        <property name="position">400</property>
+        <property name="position_set">True</property>
+        <property name="wide_handle">True</property>
+        <child>
+          <object class="GtkScrolledWindow" id="scroll_source_code">
+            <property name="width_request">200</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <child>
+              <object class="GtkSourceView" id="source_code">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="has_focus">True</property>
+                <property name="left_margin">2</property>
+                <property name="right_margin">2</property>
+                <property name="monospace">True</property>
+                <property name="show_line_numbers">True</property>
+                <property name="show_line_marks">True</property>
+                <property name="tab_width">4</property>
+                <property name="auto_indent">True</property>
+                <property name="show_right_margin">True</property>
+                <property name="highlight_current_line">True</property>
+                <property name="draw_spaces">GTK_SOURCE_DRAW_SPACES_SPACE | GTK_SOURCE_DRAW_SPACES_TAB</property>
+                <property name="background_pattern">grid</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="resize">False</property>
+            <property name="shrink">True</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="scroll_diagramm">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="shadow_type">in</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="resize">True</property>
+            <property name="shrink">True</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child type="titlebar">
+      <object class="GtkHeaderBar" id="header_bar">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="title">gdot</property>
+        <property name="subtitle">some_file.dot</property>
+        <property name="show_close_button">True</property>
+        <child>
+          <object class="GtkFileChooserButton" id="btn_file_chooser">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="title" translatable="yes"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="btn_save">
+            <property name="label" translatable="yes">Save</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
