@@ -28,6 +28,8 @@ from gi.repository import Gtk, GtkSource, GObject  # noqa
 gi.require_version('PangoCairo', '1.0')
 from xdot import DotWidget # noqa
 
+import graphviz
+
 # register "non standard" widgets which we require
 GObject.type_register(GtkSource.View)
 
@@ -47,6 +49,7 @@ class GDot(object):
         self.code_buffer.set_language(self.lm.get_language("dot"))
 
         self.dotwidget = DotWidget()
+        self.dotwidget.error_dialog = self.dotwidget_error_dialog
         diagram_container = self.builder.get_object("diagram_container")
         diagram_container.pack_start(self.dotwidget, True, True, 0)
 
@@ -89,7 +92,48 @@ class GDot(object):
         self.update_dotwidget()
 
     def on_btn_export(self, button):
-        print('export')
+        chooser = Gtk.FileChooserDialog(parent=self.window,
+                                        title="Save dot File",
+                                        action=Gtk.FileChooserAction.SAVE,
+                                        buttons=(Gtk.STOCK_CANCEL,
+                                                 Gtk.ResponseType.CANCEL,
+                                                 Gtk.STOCK_SAVE,
+                                                 Gtk.ResponseType.OK))
+        chooser.set_default_response(Gtk.ResponseType.OK)
+
+        if chooser.run() == Gtk.ResponseType.OK:
+            filename = chooser.get_filename()
+            folder = chooser.get_current_folder() # TODO: save export folder
+            chooser.destroy()
+
+            name, extension = os.path.splitext(filename)
+
+            if os.path.isfile(filename):
+                box = Gtk.MessageDialog(parent=self.window,
+                                        title="File already exists",
+                                        flags=Gtk.DialogFlags.MODAL,
+                                        type=Gtk.MessageType.WARNING,
+                                        message_format='Do you want to override: "{}"?'.format(filename),
+                                        buttons=Gtk.ButtonsType.OK_CANCEL)
+                ans = box.run()
+                box.hide()
+                if ans != Gtk.ResponseType.OK:
+                    return
+
+            try:
+                graph = graphviz.Source(self.get_dotcode(), format=extension[1:])
+                graph.render(name)
+            except Exception as e:
+                box = Gtk.MessageDialog(parent=self.window,
+                                        title="graphviz export error",
+                                        flags=Gtk.DialogFlags.MODAL,
+                                        type=Gtk.MessageType.ERROR,
+                                        message_format=e,
+                                        buttons=Gtk.ButtonsType.OK)
+                box.run()
+                box.hide()
+        else:
+            chooser.destroy()
 
     def on_btn_zoom_in(self, button):
         self.dotwidget.on_zoom_in(button)
@@ -104,7 +148,6 @@ class GDot(object):
         self.dotwidget.on_zoom_100(button)
 
     def open_file(self, path):
-        # TODO: current content not saved
         with open(path, 'r') as fp:
             self.set_dotcode(fp.read())
             self.header_bar.set_subtitle(path)
@@ -133,7 +176,18 @@ class GDot(object):
             if not os.path.splitext(filename)[1]:
                 filename = '{}.dot'.format(filename)
 
-            # TODO: file already exists dialog
+            # TODO: canonicalize
+            if os.path.isfile(filename) and filename != self.open_file_chooser.get_filename():
+                box = Gtk.MessageDialog(parent=self.window,
+                                        title="File already exists",
+                                        flags=Gtk.DialogFlags.MODAL,
+                                        type=Gtk.MessageType.WARNING,
+                                        message_format='Do you want to override: "{}"?'.format(filename),
+                                        buttons=Gtk.ButtonsType.OK_CANCEL)
+                ans = box.run()
+                box.hide()
+                if ans != Gtk.ResponseType.OK:
+                    return
 
             self.save_file(filename)
 
@@ -167,6 +221,16 @@ class GDot(object):
 
     def update_dotwidget(self):
         self.dotwidget.set_dotcode(self.get_dotcode(), None)
+
+    def dotwidget_error_dialog(self, message):
+        box = Gtk.MessageDialog(parent=self.window,
+                                title="graphviz error",
+                                flags=Gtk.DialogFlags.MODAL,
+                                type=Gtk.MessageType.ERROR,
+                                message_format=message,
+                                buttons=Gtk.ButtonsType.OK)
+        box.run()
+        box.hide()
 
 
 def main():

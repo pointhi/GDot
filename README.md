@@ -12,13 +12,12 @@ Thanks to xdot, there is no heavy lifting to do to achive this goal. So I simply
 
 * loading/saving .dot files
 * visualisation using xdot
+* export dialog
 
 ### TODO
 
-* export dialog
 * keybindings
 * header bar like in gedit
-* error handling (incorrect dotfiles)
 * error visualisation on GtkSourceView
 * autocompletion
 
