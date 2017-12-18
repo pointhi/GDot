@@ -28,7 +28,7 @@ setup(
     install_requires=['xdot', 'graphviz'],
     packages=['gdot'],
     package_data={'': ['gdot.glade']},
-    entry_points=dict(gui_scripts=['gdot=gdot:main']),
+    entry_points=dict(gui_scripts=['gdot=gdot.gdot:main']),
 
     # https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
