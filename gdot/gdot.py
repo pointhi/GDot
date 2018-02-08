@@ -220,7 +220,7 @@ class GDot(object):
         os.chdir(dir)
 
     def update_dotwidget(self):
-        self.dotwidget.set_dotcode(self.get_dotcode(), None)
+        self.dotwidget.set_dotcode(str.encode(self.get_dotcode()), None)
 
     def dotwidget_error_dialog(self, message):
         box = Gtk.MessageDialog(parent=self.window,
