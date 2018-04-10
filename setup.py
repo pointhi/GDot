@@ -14,7 +14,7 @@ from setuptools import setup
 
 setup(
     name='GDot',
-    version='0.1',
+    version='0.2',
     author='Thomas Pointhuber',
     author_email='thomas.pointhuber@gmx.at',
     url='https://github.com/pointhi/GDot',

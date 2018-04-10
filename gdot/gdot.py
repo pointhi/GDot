@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import os
 import argparse
+import traceback
 
 import gi
 gi.require_version('Gtk', '3.0')
@@ -81,7 +82,8 @@ class GDot(object):
     def on_load_new_file(self, chooser):
         filename = chooser.get_filename();
         folder = chooser.get_current_folder()
-        self.open_file(filename)
+        with open(filename, 'r') as fp:
+            self.load_file(fp)
         if folder:
             self.set_working_dir(folder)
 
@@ -147,12 +149,11 @@ class GDot(object):
     def on_btn_zoom_100(self, button):
         self.dotwidget.on_zoom_100(button)
 
-    def open_file(self, path):
-        with open(path, 'r') as fp:
-            self.set_dotcode(fp.read())
-            self.header_bar.set_subtitle(path)
+    def load_file(self, stream):
+        self.set_dotcode(stream.read())
+        self.header_bar.set_subtitle(stream.name)
 
-            self.open_file_chooser.set_filename(path)
+        self.open_file_chooser.set_filename(stream.name)
 
     def save_as_file(self):
         chooser = Gtk.FileChooserDialog(parent=self.window,
@@ -220,7 +221,10 @@ class GDot(object):
         os.chdir(dir)
 
     def update_dotwidget(self):
-        self.dotwidget.set_dotcode(str.encode(self.get_dotcode()), None)
+        try:
+            self.dotwidget.set_dotcode(str.encode(self.get_dotcode()), None)
+        except Exception:
+            self.dotwidget_error_dialog("Cannot render graphviz code!\n\n{}".format(traceback.format_exc()))
 
     def dotwidget_error_dialog(self, message):
         box = Gtk.MessageDialog(parent=self.window,
@@ -235,7 +239,7 @@ class GDot(object):
 
 def main():
     parser = argparse.ArgumentParser(description='GUI to edit and view graphviz files')
-    parser.add_argument('dotfile', nargs='?', type=str)
+    parser.add_argument('dotfile', nargs='?', type=argparse.FileType('r'))
 
     args = parser.parse_args()
 
@@ -244,7 +248,7 @@ def main():
 
     # load file if specified
     if args.dotfile:
-        gdot.open_file(args.dotfile)
+        gdot.load_file(args.dotfile)
 
     # workaround to support KeyboardInterrupt
     import signal
